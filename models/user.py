@@ -16,3 +16,4 @@ class Worker(User):
     skills: List[str]
     descriptions: str
     work_type: str
+    rating: float

@@ -1,17 +1,12 @@
 from pydantic import BaseModel
 from bson import ObjectId
+from models.user import Worker
+from models.user import User
 
-class Worker(BaseModel):
-    name: str 
-    mobile: str
 
-class Customer(BaseModel):
-    name: str 
-    mobile: str    
-    
 class Booking(BaseModel):
     worker: Worker
-    customer: Customer
+    customer: User
     start_date: str
     end_date: str
     start_time: str
@@ -21,5 +16,6 @@ class Booking(BaseModel):
     address: str
     location: str
     description: str
+    job: str # new added
     _id: str
     

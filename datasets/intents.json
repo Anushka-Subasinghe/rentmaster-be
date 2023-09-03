@@ -1,0 +1,70 @@
+{"intents": [
+  {"tag": "greetings",
+  "patterns": ["hello","hey","hi","good day","Greetings","what's up?","how is it going?"],
+  "responses": ["Hi! How can I assess you? What kind of Services you want from us sir?"]
+  },
+
+  {"tag": "services",
+  "patterns": ["What kind of services do you have?","What services do you have?","What types of services are offered?","Can you provide me with a list of your services?","What specific services do you provide?"],
+  "responses": ["Sir we have service providers to full fill your household works."]
+  },
+
+  {"tag": "categories",
+  "patterns": ["What kind of service providers do you have?", "How many service providers currently do you have?" , "What categories of service providers are available through your platform?"],
+  "responses": ["Currently we have car painters, Housecleaner’s, Gardener’s, Babysitter’s"]
+  },
+
+   {"tag": "booking",
+  "patterns": ["Can I book one of them?", "Can I make a reservation for one of them?","Is it possible to schedule/book one of them?","Am I able to secure a booking for one of them?","Can I reserve the services of one of them?","Is there availability to book one of them?","Can I request a booking for one of them?","Am I allowed to book one of them?","Can I set up an appointment for one of them?","Is it permissible to make a booking for one of them?"],
+  "responses": ["Yes, sir, the choice is yours."]
+  },
+
+   {"tag": "bookingSpecific",
+  "patterns": ["Can I book a house cleaner?","Can I schedule a house cleaning service?","Is it possible to reserve a professional cleaner?","Can I make a booking for a house cleaner?","Is there an option to hire a cleaner for my home?","Can I arrange for a house cleaning appointment?","Is it available to book a cleaner for my residence?","Can I request a professional cleaner for my house?","Is there a way to schedule a cleaning service for my home?"],
+  "responses": ["Yes, we have housecleaners ready for service right now."]
+  },
+
+  {"tag": "serviceDetails",
+  "patterns": ["Can you give me the details about house cleaner?","Could you provide me with information about the house cleaner?","Can you share the details regarding the house cleaner?","Can you provide me with the necessary details about the house cleaner?","I would like to know more about the house cleaner. Can you provide the specifics?"],
+  "responses": ["Yes, sir. I'm here to assist you, and I'll provide you with the necessary details about a house cleaner.", "cleaner details"]
+  },
+
+  {"tag": "bookingService",
+  "patterns": ["I would like to book him."," Could you arrange a booking for him?","Please set up an appointment with him.","Please book him for me.","I want to reserve his services for a certain date."],
+  "responses": ["May I kindly request you to provide the details of the date, time, and address for the booking to give template?", "booking details"]
+  },
+
+  {"tag": "bookingDetails",
+  "patterns": ["I would like to book him."," Could you arrange a booking for him?","Please set up an appointment with him.","Please book him for me.","I want to reserve his services for a certain date."],
+  "responses": ["May I kindly request you to provide the details of the date, time, and address for the booking to give template?", "booking details"]
+  },
+
+  {"tag": "bookingConfirm",
+  "patterns": ["Yes, I would like to co fir "]
+  },
+
+  {"tag": "bookingConfirm",
+  "patterns": ["Yes, I would like book him.","Yes, I would like to book him.","Yes, I would like to confirm the booking.","Yes, I would like to confirm the appointment.","Yes, I would like to confirm the reservation.","Yes, I would like to confirm the schedule.","Yes, I would like to confirm the service.","Yes, I would like to confirm the booking.","Yes, I would like to confirm the appointment.","Yes, I would like to confirm the reservation.","Yes, I would like to confirm the schedule.","Yes, I would like to confirm the service."],
+  "responses": ["Thank you for confirming the booking. I will send you a confirmation email shortly."]
+  },
+
+  {"tag": "bookingCancel",
+  "patterns": ["I would like to cancel the booking.","I would like to cancel the appointment.","I would like to cancel the reservation.","I would like to cancel the schedule.","I would like to cancel the service.","I would like to cancel the booking.","I would like to cancel the appointment.","I would like to cancel the reservation.","I would like to cancel the schedule.","I would like to cancel the service."],
+  "responses": ["I'm sorry to hear that. May I know the reason for the cancellation?"]
+  },
+
+  {"tag": "bookingCancelReason",
+  "patterns": ["I have a personal emergency.","I have a family emergency.","I have a work emergency.","I have a personal emergency.","I have a family emergency.","I have a work emergency."],
+  "responses": ["I'm sorry to hear that. I will cancel the booking for you. I hope everything is okay."]
+  },
+
+  {"tag": "Thanking",
+  "patterns": ["Okay thank you","Alright, thank you.","Thank you for your assistance.","I appreciate your help.","Thanks a lot.","Great, thanks.","I'm grateful for your support.","Many thanks.","I'm thankful for your cooperation.","Thanks for your time and help.","I'm appreciative of your guidance."],
+  "responses": ["We are thankful for your patience and for giving us the opportunity to serve you."]
+  },
+
+  {"tag": "Goodbye",
+  "patterns": ["Goodbye","Bye","See you later","See you soon","I have to go","I have to leave","I have to get going","I have to head out","I have to take off","I have to run","I have to hit the road","I have to push off","I have to shove off","I have to split","I have to clear out","I have to bail","I have to bail out","I have to cut out","I have to cut out of here","I have to cut and run","I have to make tracks","I have to make like a tree and leave","I have to make like a baby and head out","I have to make like a baby and get out of here","I have to make like a baby and get out of this place","I have to make like a baby and leave","I have to make like a baby and get going","I have to make like a baby and get out of here","I have to make like a baby and get out of this place","I have to make like a baby and leave","I have to make like a baby and get going","I have to make like a baby and get out of here","I have to make like a baby and get out of this place","I have to make like a baby and leave","I have to make like a baby and get going","I have to make like a baby and get out of here","I have to make like a baby and get out of this place","I have to make like a baby and leave","I have to make like a baby and get going","I have to make like a baby and get out of here","I have to make like a baby and get out of this place","I have to make like a baby and leave","I have to make like a baby and get going","I have to make like a baby and get out of here","I have to make like a baby and get out of this place","I have to make like a baby and leave","I have to make like a baby and get going","I have to make like a baby and get out of here","I have to make like a baby and get out of this place","I have to make like a baby and leave","I have to make like a baby and get going","I have to make like a baby and get out of here","I have to make like a baby and get"],
+  "respones":["Goodbye, have a nice day!"]
+  }
+]}

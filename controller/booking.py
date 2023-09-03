@@ -7,9 +7,22 @@ from bson import ObjectId
 
 def create(booking: Booking):
     print("<===== Create Booking =====>")
-    inserted_result = db.booking.insert_one(dict(booking))
+    
+    # Serialize the Worker object to a dictionary
+    worker_dict = dict(booking.worker)
+    
+    # Serialize the Customer object to a dictionary
+    customer_dict = dict(booking.customer)
+    
+    # Create a new Booking object with the serialized Worker
+    booking_dict = dict(booking)
+    booking_dict['worker'] = worker_dict
+    booking_dict['customer'] = customer_dict
+    
+    inserted_result = db.booking.insert_one(booking_dict)
     insert_booking = db.booking.find_one({"_id": inserted_result.inserted_id})
     return serializeDict(insert_booking)
+
     
 def getAll():
     print("<===== Get All Booking =====>")
