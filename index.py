@@ -20,14 +20,16 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:5173/",
     "http://localhost:5173/",
+    "http://127.0.0.1:8000/",
+    "http://localhost:8000",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # Set this to the appropriate origins
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Adjust as needed
-    allow_headers=["Content-Type", "Authorization"],
+    allow_methods=["*"],  # Set this to the allowed HTTP methods
+    allow_headers=["*"],  # Set this to the allowed headers
 )
 
 app.include_router(chatbot)
@@ -38,4 +40,3 @@ app.include_router(advertisement)
 app.include_router(job)
 app.include_router(booking)
 print("<============== Server started ==============>")
-

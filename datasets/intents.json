@@ -40,10 +40,6 @@
   },
 
   {"tag": "bookingConfirm",
-  "patterns": ["Yes, I would like to co fir "]
-  },
-
-  {"tag": "bookingConfirm",
   "patterns": ["Yes, I would like book him.","Yes, I would like to book him.","Yes, I would like to confirm the booking.","Yes, I would like to confirm the appointment.","Yes, I would like to confirm the reservation.","Yes, I would like to confirm the schedule.","Yes, I would like to confirm the service.","Yes, I would like to confirm the booking.","Yes, I would like to confirm the appointment.","Yes, I would like to confirm the reservation.","Yes, I would like to confirm the schedule.","Yes, I would like to confirm the service."],
   "responses": ["Thank you for confirming the booking. I will send you a confirmation email shortly."]
   },

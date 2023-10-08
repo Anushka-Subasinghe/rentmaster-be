@@ -1,10 +1,17 @@
+from urllib.parse import quote_plus
 from pymongo import MongoClient
-# conn = MongoClient("mongodb://localhost:27017/rental") # localhost db
-conn = MongoClient("mongodb+srv://admin:oWfBHWmnl77NQYao@cluster0.usi1jhb.mongodb.net/?retryWrites=true&w=majority") # Mongodb Atlas cloud
 
-db = conn.rental_work_db
+# Encode the username and password
+username = "anushka"
+password = "Anu@12345"
+encoded_username = quote_plus(username)
+encoded_password = quote_plus(password)
 
-collection_name = db["rental_work_collection"]
+# MongoDB Atlas connection string with encoded username and password
+uri = f"mongodb://{encoded_username}:{encoded_password}@ac-2y3cnu2-shard-00-00.medfjfh.mongodb.net:27017,ac-2y3cnu2-shard-00-01.medfjfh.mongodb.net:27017,ac-2y3cnu2-shard-00-02.medfjfh.mongodb.net:27017/?ssl=true&replicaSet=atlas-6rzj10-shard-0&authSource=admin&retryWrites=true&w=majority"
 
- 
+# Create the MongoDB client
+conn = MongoClient(uri)
 
+# Access the database (assuming you have a database named 'mydatabase')
+db = conn['rentmaster']

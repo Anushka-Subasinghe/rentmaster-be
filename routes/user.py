@@ -1,14 +1,21 @@
 from fastapi import APIRouter
-from controller.user import create, getOne, getAll, update, delete
-from models.user import User
+from controller.user import register, getOne, getAll, update, delete, login
+from models.user import User, LoginData
 
 user = APIRouter()
 
-@user.post('/user')
-async def create_user(user: User):
-    res = create(user)
-    print("res : ", res)
+
+@user.post('/user/register')
+async def register_user(user: User):
+    res = register(user)
     return res
+
+
+@user.post('/user/login')
+async def login_user(user_data: LoginData):
+    res = login(user_data)
+    return res
+
 
 @user.get('/user/{user_id}')
 async def get_user_by_id(user_id: str):
@@ -17,14 +24,17 @@ async def get_user_by_id(user_id: str):
         return user
     return {"message": "User not found"}
 
+
 @user.delete('/worker/{user_id}')
 async def delete_worker(user_id: str):
     return delete(user_id)
+
 
 @user.get('/users')
 async def get_all_users():
     users = getAll()
     return users
+
 
 @user.put('/user/{user_id}')
 async def update_user_by_id(user_id: str, updated_user: User):
