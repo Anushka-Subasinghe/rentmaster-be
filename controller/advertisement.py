@@ -1,7 +1,7 @@
 import json
 from fastapi import HTTPException, status
 from typing import List, Dict
-from models.advertisement import Advertisement
+from models.advertisement import Advertisement, UpdateAdvertisement
 from schemas.serialize import serializeDict, serializeList
 from config.db import db
 from bson import ObjectId
@@ -21,7 +21,10 @@ def post_advertisement(advertisement: Advertisement):
         "time": advertisement.time,
         "email": advertisement.email,
         "status": advertisement.status,
-        "customer_name": user["username"]
+        "latitude": advertisement.latitude,
+        "longitude": advertisement.longitude,
+        "customer_name": user["username"],
+        "customer_id": str(user["_id"])
     }
 
     # Insert the job into the database
@@ -35,7 +38,6 @@ def getAll():
     return serializeList(db.advertisement.find())
 
 def getAdvertisementsByCustomer(email: str):
-    print("<===== get Customer Advertisements =====>")
 
     # Query the database to find all advertisements with the specified email
     advertisements = db.advertisements.find({"email": email})
@@ -52,7 +54,6 @@ def getAdvertisementsByCustomer(email: str):
         return json.dumps({"advertisements": []})
     
 def getAdvertisementsByJobType(job_types: list):
-    print("<===== get Job Type Advertisements =====>")
 
     # Query the database to find all advertisements with the specified job types
     advertisements = db.advertisements.find({"job_type": {"$in": job_types}})
@@ -63,22 +64,21 @@ def getAdvertisementsByJobType(job_types: list):
         ad['_id'] = str(ad['_id'])
         advertisements_list.append(ad)
 
-    print(advertisements_list)    
-
     if advertisements_list:
         return json.dumps({"advertisements": advertisements_list})
     else:
         return json.dumps({"advertisements": []})   
 
-def update(id, advertisement: Advertisement):
+def update_advertisement(update: UpdateAdvertisement):
     print("<===== update Advertisement =====>")
-    db.advertisement.find_one_and_update({"_id": ObjectId(id)}, {
-        "$set": dict(advertisement)
-    })
-    inserted_doc = db.advertisement.find_one({"_id": ObjectId(id)})
+    db.advertisements.find_one_and_update(
+        {"_id": ObjectId(update.id)},
+    {"$set": {"status": update.status, "worker_name": update.worker_name, "worker_id": update.worker_id}})
+    
+    inserted_doc = db.advertisements.find_one({"_id": ObjectId(update.id)})
     return serializeDict(inserted_doc)
 
-def delete(id: str):
+def delete_advertisement(id: str):
     print("<===== delete Advertisement =====>", id)
     result = db.advertisements.delete_one({"_id": ObjectId(id)})
     if result.deleted_count == 0:

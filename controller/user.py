@@ -76,7 +76,8 @@ def login(loginData: LoginData):
             "name": res["username"],
             "email": res["email"],
             "user_type": res["user_type"],
-            "job_types": res["job_types"] if res["user_type"] == "worker" else None
+            "job_types": res["job_types"] if res["user_type"] == "worker" else None,
+            "id": str(res['_id'])
         }
     else:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,

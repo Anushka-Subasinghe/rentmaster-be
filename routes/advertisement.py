@@ -1,13 +1,13 @@
 from typing import List
 from fastapi import APIRouter, Path, Query
 import urllib
-from controller.advertisement import post_advertisement, getAdvertisementsByCustomer, getAdvertisementsByJobType, update, delete
-from models.advertisement import Advertisement
+from controller.advertisement import post_advertisement, getAdvertisementsByCustomer, getAdvertisementsByJobType, update_advertisement, delete_advertisement
+from models.advertisement import Advertisement, UpdateAdvertisement
 
 advertisement = APIRouter()
 
 @advertisement.post('/advertisement')
-async def create_advertisement(advertisement: Advertisement):
+async def create(advertisement: Advertisement):
     return post_advertisement(advertisement)
 
 @advertisement.get('/advertisement/customer/{encoded_email}')
@@ -20,12 +20,12 @@ async def get_advertisement_by_job_types(job_types: List[str] = Query(...)):
     return getAdvertisementsByJobType(job_types)
 
 @advertisement.delete('/advertisement/{advertisement_id}')
-async def delete_advertisement(advertisement_id: str = Path(...)):
-    return delete(advertisement_id)
+async def delete(advertisement_id: str = Path(...)):
+    return delete_advertisement(advertisement_id)
 
-@advertisement.put('/advertisement/{advertisement_id}')
-async def update_advertisement(advertisement_id: str, updated_advertisement: Advertisement):
-    return update(advertisement_id, updated_advertisement)
+@advertisement.patch('/advertisement')
+async def update(update: UpdateAdvertisement):
+    return update_advertisement(update)
     
 # @advertisement.get('/advertisements')
 # async def get_all_advertisements():
