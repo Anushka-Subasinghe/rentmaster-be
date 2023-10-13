@@ -9,6 +9,7 @@ class Advertisement(BaseModel):
     status: str
     latitude: float
     longitude: float
+    forecast: str
 
 class UpdateAdvertisement(BaseModel):
     id: str

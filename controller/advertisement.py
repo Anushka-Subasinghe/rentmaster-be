@@ -23,6 +23,7 @@ def post_advertisement(advertisement: Advertisement):
         "status": advertisement.status,
         "latitude": advertisement.latitude,
         "longitude": advertisement.longitude,
+        "forecast": advertisement.forecast,
         "customer_name": user["username"],
         "customer_id": str(user["_id"])
     }

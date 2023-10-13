@@ -17,7 +17,7 @@ def getAll():
 
 def getOne(id):
     print("<===== getLastOne Worker =====>")
-    res = serializeDict(db.worker.find_one({"_id": ObjectId(id)}))
+    res = serializeDict(db.users.find_one({"_id": ObjectId(id)}))
     if res:
         return res
     raise HTTPException(status_code=404, detail="Worker not found")
