@@ -22,8 +22,14 @@ def register(user: User):
             "salt": salt
         }
         inserted_result = db.users.insert_one(dict(user))
-        inserted_user = db.users.find_one({"_id": inserted_result.inserted_id})
-        return serializeDict(inserted_user)
+        res = db.users.find_one({"_id": inserted_result.inserted_id})
+        return {
+            "name": res["username"],
+            "email": res["email"],
+            "user_type": res["user_type"],
+            "job_types": res["job_types"] if res["user_type"] == "worker" else None,
+            "id": str(res['_id'])
+        }
     else:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="User with this email already exists. Please use a different email.")
