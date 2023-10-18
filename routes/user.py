@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from controller.user import register, getOne, getAll, update, delete, login
+from controller.user import register, getOne, getAll, update, delete, login, checkEmail
 from models.user import User, LoginData
 
 user = APIRouter()
@@ -14,6 +14,11 @@ async def register_user(user: User):
 @user.post('/user/login')
 async def login_user(user_data: LoginData):
     res = login(user_data)
+    return res
+
+@user.get('/user/check-email/{email}')
+async def register_user(email: str):
+    res = checkEmail(email)
     return res
 
 

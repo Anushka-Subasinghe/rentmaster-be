@@ -1,10 +1,38 @@
 import json
 from fastapi import HTTPException, status
 from typing import List, Dict
-from models.advertisement import Advertisement, UpdateAdvertisement
+from models.advertisement import AcceptAdvertisement, Advertisement, BidAdvertisement, CancelBid, CancelJob
 from schemas.serialize import serializeDict, serializeList
 from config.db import db
 from bson import ObjectId
+from fastapi.encoders import jsonable_encoder
+import pandas as pd
+import joblib
+import os
+
+def predict(input_data):
+    try:
+        print(input_data)
+        
+        # Convert the input data into a DataFrame
+        input_df = pd.DataFrame([input_data])
+
+        print("Current working directory:", os.getcwd())
+
+        loaded_best_model = joblib.load(os.getcwd() + '/controller/model.pkl')
+        
+        # Make predictions using the loaded model
+        predictions = loaded_best_model.predict(input_df)
+
+        predicted_value = int(predictions[0])
+
+        print('prediction ${predicted_value}')
+        
+        # Return the predicted value
+        return predicted_value == 1
+    except Exception as e:
+        print('error', e)
+        return None
 
 def post_advertisement(advertisement: Advertisement):
     print("<===== Create Advertisement =====>")
@@ -13,6 +41,17 @@ def post_advertisement(advertisement: Advertisement):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
         )
+    
+    forecast = advertisement.forecast
+    
+    weather = {
+        "temperature": forecast.temperature,
+        "windspeed": forecast.windspeed,
+        "humidity": forecast.humidity,
+        "work_type": advertisement.work_type
+    }
+
+    prediction = predict(weather)
 
     # Create the job document
     advertisement = {
@@ -23,9 +62,10 @@ def post_advertisement(advertisement: Advertisement):
         "status": advertisement.status,
         "latitude": advertisement.latitude,
         "longitude": advertisement.longitude,
-        "forecast": advertisement.forecast,
+        "forecast": jsonable_encoder(forecast),
         "customer_name": user["username"],
-        "customer_id": str(user["_id"])
+        "customer_id": str(user["_id"]),
+        "prediction": prediction
     }
 
     # Insert the job into the database
@@ -70,13 +110,46 @@ def getAdvertisementsByJobType(job_types: list):
     else:
         return json.dumps({"advertisements": []})   
 
-def update_advertisement(update: UpdateAdvertisement):
+def accept_advertisement(update: AcceptAdvertisement):
     print("<===== update Advertisement =====>")
     db.advertisements.find_one_and_update(
         {"_id": ObjectId(update.id)},
-    {"$set": {"status": update.status, "worker_name": update.worker_name, "worker_id": update.worker_id}})
+    {"$set": {"status": "Accepted", "worker_name": update.worker_name, "worker_id": update.worker_id, "price": update.price, "bid": []}})
     
     inserted_doc = db.advertisements.find_one({"_id": ObjectId(update.id)})
+    return serializeDict(inserted_doc)
+
+def cancel_job(cancel: CancelJob):
+    print("<===== cancel Job =====>")
+    db.advertisements.find_one_and_update(
+        {"_id": ObjectId(cancel.id)},
+    {"$set": {
+    "status": "Active",
+    "worker_name": "",
+    "worker_id": "",
+    "price": "",
+    "bid": []
+  }})
+    
+    inserted_doc = db.advertisements.find_one({"_id": ObjectId(cancel.id)})
+    return serializeDict(inserted_doc)
+
+
+def bid_advertisement(bid: BidAdvertisement):
+    print("<===== bid Advertisement =====>")
+    db.advertisements.find_one_and_update(
+        {"_id": ObjectId(bid.id)},
+    {"$push": {"bid": {"worker_name": bid.worker_name, "worker_id": bid.worker_id, "price": bid.price}}})
+    
+    inserted_doc = db.advertisements.find_one({"_id": ObjectId(bid.id)})
+    return serializeDict(inserted_doc)
+
+def cancel_bid(bid: CancelBid):
+    print("<===== Cancel Bid =====>")
+    db.advertisements.find_one_and_update(
+        {"_id": ObjectId(bid.id)},
+    {"$pull": {"bid": {"worker_id": bid.worker_id}}})
+    inserted_doc = db.advertisements.find_one({"_id": ObjectId(bid.id)})
     return serializeDict(inserted_doc)
 
 def delete_advertisement(id: str):

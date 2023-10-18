@@ -73,7 +73,13 @@ def verify_user(loginData: LoginData):
             return None  # Password is incorrect
     else:
         return None  # User not found
-
+    
+def checkEmail(email: str):    
+    user = db.users.find_one({"email": email})
+    if user:
+        return True
+    else:
+        return False
 
 def login(loginData: LoginData):
     res = verify_user(loginData)
