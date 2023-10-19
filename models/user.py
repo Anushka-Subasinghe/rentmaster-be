@@ -22,3 +22,6 @@ class Worker(User):
 class LoginData(BaseModel):
     email: str
     password: str
+
+class JobType(BaseModel):
+    JobType: str    

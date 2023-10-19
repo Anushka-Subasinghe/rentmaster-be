@@ -2,11 +2,21 @@ import bcrypt
 from typing import List, Dict
 
 from fastapi import HTTPException, status
-from models.user import User, LoginData
+from models.user import User, LoginData, JobType
 from schemas.serialize import serializeDict, serializeList
 from config.db import db
 from bson import ObjectId
 
+def getWorkersByJobType(jobType: JobType):
+    print(jobType)
+    workers = db.users.find({"job_types": {"$in": [jobType]}})
+    hasworkers = []
+    for worker in workers:
+    # Access and work with the matching documents
+        print(worker)
+        worker['_id'] = str(worker['_id'])
+        hasworkers.append(worker)
+    return hasworkers    
 
 def register(user: User):
     salt = bcrypt.gensalt()

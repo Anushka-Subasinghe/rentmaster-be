@@ -31,6 +31,13 @@ class CancelBid(BaseModel):
 class CancelJob(BaseModel):
     id: str               
 
+class SelectWorker(BaseModel):
+    id: str
+    name: str
+    worker_id: str
+    email: str
+    job_types: list    
+
 class AcceptAdvertisement(BaseModel):
     id: str
     worker_name: str

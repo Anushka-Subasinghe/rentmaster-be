@@ -1,7 +1,7 @@
 import json
 from fastapi import HTTPException, status
 from typing import List, Dict
-from models.advertisement import AcceptAdvertisement, Advertisement, BidAdvertisement, CancelBid, CancelJob
+from models.advertisement import AcceptAdvertisement, Advertisement, BidAdvertisement, CancelBid, CancelJob, SelectWorker
 from schemas.serialize import serializeDict, serializeList
 from config.db import db
 from bson import ObjectId
@@ -65,7 +65,9 @@ def post_advertisement(advertisement: Advertisement):
         "forecast": jsonable_encoder(forecast),
         "customer_name": user["username"],
         "customer_id": str(user["_id"]),
-        "prediction": prediction
+        "prediction": prediction,
+        "bid": [],
+        "selectedWorkers": []
     }
 
     # Insert the job into the database
@@ -158,3 +160,13 @@ def delete_advertisement(id: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Advertisement not found")
     return {"status_code": 200, "detail": "Advertisement Deleted" }
+
+def select_worker(worker: SelectWorker):
+    print("<===== Select Worker =====>")
+    filter = {"_id": ObjectId(worker.id)}
+    update = {"$push": {"selectedWorkers": jsonable_encoder(worker)}}
+    
+    result =db.advertisements.find_one_and_update(filter, update)
+    
+    inserted_doc = db.users.find_one({"_id": ObjectId(worker.worker_id)})
+    return serializeDict(inserted_doc)
