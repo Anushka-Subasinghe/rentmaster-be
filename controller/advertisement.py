@@ -1,7 +1,7 @@
 import json
 from fastapi import HTTPException, status
 from typing import List, Dict
-from models.advertisement import AcceptAdvertisement, Advertisement, BidAdvertisement, CancelBid, CancelJob, SelectWorker
+from models.advertisement import AcceptAdvertisement, Advertisement, BidAdvertisement, CancelBid, CancelJob, CancelWorker, SelectWorker
 from schemas.serialize import serializeDict, serializeList
 from config.db import db
 from bson import ObjectId
@@ -116,7 +116,7 @@ def accept_advertisement(update: AcceptAdvertisement):
     print("<===== update Advertisement =====>")
     db.advertisements.find_one_and_update(
         {"_id": ObjectId(update.id)},
-    {"$set": {"status": "Accepted", "worker_name": update.worker_name, "worker_id": update.worker_id, "price": update.price, "bid": []}})
+    {"$set": {"status": "Accepted", "worker_name": update.worker_name, "worker_id": update.worker_id, "price": update.price, "bid": [], "selectedWorkers": []}})
     
     inserted_doc = db.advertisements.find_one({"_id": ObjectId(update.id)})
     return serializeDict(inserted_doc)
@@ -168,5 +168,15 @@ def select_worker(worker: SelectWorker):
     
     result =db.advertisements.find_one_and_update(filter, update)
     
-    inserted_doc = db.users.find_one({"_id": ObjectId(worker.worker_id)})
+    inserted_doc = db.advertisements.find_one({"_id": ObjectId(worker.id)})
+    return serializeDict(inserted_doc)
+
+def cancel_worker(worker: CancelWorker):
+    print("<===== Select Worker =====>")
+    filter = {"_id": ObjectId(worker.id)}
+    update = {"$pull": {"selectedWorkers": {"worker_id": worker.worker_id}, "bid": {"worker_id": worker.worker_id}}}
+    
+    result =db.advertisements.find_one_and_update(filter, update)
+    
+    inserted_doc = db.advertisements.find_one({"_id": ObjectId(worker.id)})
     return serializeDict(inserted_doc)

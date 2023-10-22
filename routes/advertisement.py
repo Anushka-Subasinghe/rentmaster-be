@@ -1,8 +1,8 @@
 from typing import List
 from fastapi import APIRouter, Path, Query
 import urllib
-from controller.advertisement import post_advertisement, getAdvertisementsByCustomer, getAdvertisementsByJobType, accept_advertisement, delete_advertisement, bid_advertisement, cancel_bid, cancel_job, select_worker
-from models.advertisement import AcceptAdvertisement, Advertisement, BidAdvertisement, CancelBid, CancelJob, SelectWorker
+from controller.advertisement import post_advertisement, getAdvertisementsByCustomer, getAdvertisementsByJobType, accept_advertisement, delete_advertisement, bid_advertisement, cancel_bid, cancel_job, select_worker, cancel_worker
+from models.advertisement import AcceptAdvertisement, Advertisement, BidAdvertisement, CancelBid, CancelJob, CancelWorker, SelectWorker
 
 advertisement = APIRouter()
 
@@ -42,4 +42,8 @@ async def bid(cancel: CancelJob):
 @advertisement.patch('/advertisement/selectWorker')
 async def selectWorker(worker: SelectWorker):
     return select_worker(worker)
+
+@advertisement.patch('/advertisement/cancelWorker')
+async def cancelWorker(worker: CancelWorker):
+    return cancel_worker(worker)
 

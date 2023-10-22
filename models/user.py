@@ -11,6 +11,13 @@ class User(BaseModel):
     password: str
 
 
+class UpdateUser(BaseModel):
+    id: str
+    username: str
+    email: str
+    phone: str   
+
+
 class Worker(User):
     job: str
     skills: List[str]

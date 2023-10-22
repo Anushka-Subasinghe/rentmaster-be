@@ -1,6 +1,6 @@
-from fastapi import APIRouter
-from controller.user import register, getOne, getAll, update, delete, login, checkEmail, getWorkersByJobType
-from models.user import User, LoginData
+from fastapi import APIRouter, UploadFile
+from controller.user import register, getOne, getAll, update, delete, login, checkEmail, getWorkersByJobType, updateProfilePicture, updateUserProfile
+from models.user import UpdateUser, User, LoginData
 
 user = APIRouter()
 
@@ -49,6 +49,17 @@ async def get_all_users():
 @user.put('/user/{user_id}')
 async def update_user_by_id(user_id: str, updated_user: User):
     updated_user = update(user_id, updated_user)
+    if updated_user:
+        return updated_user
+    return {"message": "User not found"}
+
+@user.post("/user/profilePicture/{id}")
+async def upload_profile_picture(file: UploadFile, id: str):
+    return updateProfilePicture(file, id)
+
+@user.patch('/user/updateProfile')
+async def update_user_profile(updated_user: UpdateUser):
+    updated_user = updateUserProfile(updated_user)
     if updated_user:
         return updated_user
     return {"message": "User not found"}

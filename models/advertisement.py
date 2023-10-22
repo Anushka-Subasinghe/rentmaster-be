@@ -38,6 +38,10 @@ class SelectWorker(BaseModel):
     email: str
     job_types: list    
 
+class CancelWorker(BaseModel):
+    id: str
+    worker_id: str  
+
 class AcceptAdvertisement(BaseModel):
     id: str
     worker_name: str
