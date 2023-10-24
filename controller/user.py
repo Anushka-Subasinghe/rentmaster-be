@@ -42,37 +42,17 @@ def register(user: User):
             "user_type": res["user_type"],
             "job_types": res["job_types"] if res["user_type"] == "worker" else None,
             "id": str(res['_id']),
-            "profile_picture": res['profile_picture'] if res["profile_picture"] else None
+            "profile_picture": res['profile_picture'] if res["profile_picture"] else None,
+            "rating": 5 if res["user_type"] == "worker" else None
         }
     else:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="User with this email already exists. Please use a different email.")
 
 
-def getAll():
-    print("<===== Get All User =====>")
-    return serializeList(db.users.find())
-
-
-def getOne(id):
-    print("<===== getLastOne =====>")
-    res = serializeDict(db.users.find_one({"_id": ObjectId(id)}))
-    print(res)
-    return res
-
-
-def update(user: User):
-    db.users.find_one_and_update({"email": user.email}, {
-        "$set": dict(user)
-    })
-    inserted_doc = db.users.find_one({"email": user.email})
-    return serializeDict(inserted_doc)
-
-def delete(user: User):
-    result = db.users.delete_one({"email": user.email})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"status_code": 200, "detail": "User Deleted"}
+def getAllWorkers():
+    print("<===== Get All Workers =====>")
+    return serializeList(db.users.find({"user_type": "worker"}))
 
 
 def verify_user(loginData: LoginData):
@@ -104,7 +84,8 @@ def login(loginData: LoginData):
             "user_type": res["user_type"],
             "job_types": res["job_types"] if res["user_type"] == "worker" else None,
             "id": str(res['_id']),
-            "profile_picture": res["profile_picture"] if "profile_picture" in res else None
+            "profile_picture": res["profile_picture"] if "profile_picture" in res else None,
+            "rating": res['rating'] if res["rating"] else None
         }
     else:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
@@ -130,13 +111,37 @@ def updateProfilePicture(picture: UploadFile, id: str):
             "user_type": res["user_type"],
             "job_types": res["job_types"] if res["user_type"] == "worker" else None,
             "id": str(res['_id']),
-            "profile_picture": res['profile_picture'] if res["profile_picture"] else None
+            "profile_picture": res['profile_picture'] if res["profile_picture"] else None,
+            "rating": res['rating'] if res["rating"] else None
         }
 
 def updateUserProfile(user: UpdateUser):
     db.users.find_one_and_update({"_id": ObjectId(user.id)}, {
         "$set": dict(user)
     })
+
+    condition = {
+    "customer_id": user.id
+    } if user.user_type == 'customer' else {
+        "worker_id": user.id
+    }
+
+    # Define the fields to update
+    update_fields = {
+        "$set": {
+            "customer_name": user.username,
+            "email": user.email,
+        } if user.user_type == 'customer' else {
+            "worker_name": user.username,
+        }
+    }
+
+    # Perform the update operation
+    res = db.advertisements.update_many(condition, update_fields)
+
+    # Print the number of documents updated
+    print(f"Number of documents updated: {res.modified_count}")
+
     res = db.users.find_one({"_id": ObjectId(user.id)})
     return {
             "name": res["username"],
@@ -145,6 +150,7 @@ def updateUserProfile(user: UpdateUser):
             "user_type": res["user_type"],
             "job_types": res["job_types"] if res["user_type"] == "worker" else None,
             "id": str(res['_id']),
-            "profile_picture": res['profile_picture'] if res["profile_picture"] else None
+            "profile_picture": res['profile_picture'] if res["profile_picture"] else None,
+            "rating": res['rating'] if res["rating"] else None
         }
 

@@ -13,9 +13,11 @@ class User(BaseModel):
 
 class UpdateUser(BaseModel):
     id: str
+    user_type: str
     username: str
     email: str
-    phone: str   
+    phone: str
+    rating: float   
 
 
 class Worker(User):
