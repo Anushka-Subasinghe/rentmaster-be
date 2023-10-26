@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from bson import ObjectId
 from typing import List, Union
 
 
@@ -19,6 +18,10 @@ class UpdateUser(BaseModel):
     phone: str
     rating: float   
 
+class RateWorker(BaseModel):
+    id: str
+    rating: float      
+
 
 class Worker(User):
     job: str
@@ -34,3 +37,6 @@ class LoginData(BaseModel):
 
 class JobType(BaseModel):
     JobType: str    
+
+class IdUser(BaseModel):
+    id: str    

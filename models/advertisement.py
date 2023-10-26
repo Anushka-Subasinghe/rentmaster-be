@@ -29,7 +29,10 @@ class CancelBid(BaseModel):
     worker_id: str
 
 class CancelJob(BaseModel):
-    id: str               
+    id: str             
+
+class FinishJob(BaseModel):
+    id: str           
 
 class SelectWorker(BaseModel):
     id: str

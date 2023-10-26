@@ -1,10 +1,9 @@
 import base64
 import bcrypt
-from typing import List, Dict
 
 from fastapi import HTTPException, UploadFile, status
-from models.user import UpdateUser, User, LoginData, JobType
-from schemas.serialize import serializeDict, serializeList
+from models.user import IdUser, RateWorker, UpdateUser, User, LoginData, JobType
+from schemas.serialize import serializeList
 from config.db import db
 from bson import ObjectId
 
@@ -31,7 +30,9 @@ def register(user: User):
             "job_types": user.job_types if user.user_type == "worker" else None,
             "hashed_password": password,
             "salt": salt,
-            "phone": ''
+            "phone": '',
+            "profile_picture": '',
+            "rating": 5 if user.user_type == "worker" else ''
         }
         inserted_result = db.users.insert_one(dict(user))
         res = db.users.find_one({"_id": inserted_result.inserted_id})
@@ -43,7 +44,7 @@ def register(user: User):
             "job_types": res["job_types"] if res["user_type"] == "worker" else None,
             "id": str(res['_id']),
             "profile_picture": res['profile_picture'] if res["profile_picture"] else None,
-            "rating": 5 if res["user_type"] == "worker" else None
+            "rating": res['rating']
         }
     else:
         raise HTTPException(
@@ -153,4 +154,39 @@ def updateUserProfile(user: UpdateUser):
             "profile_picture": res['profile_picture'] if res["profile_picture"] else None,
             "rating": res['rating'] if res["rating"] else None
         }
+
+def rateWorker(worker: RateWorker):
+    db.users.find_one_and_update({"_id": ObjectId(worker.id)}, {
+        "$set": {
+            "rating": worker.rating
+        }
+    })
+
+    res = db.users.find_one({"_id": ObjectId(worker.id)})
+    return {
+            "name": res["username"],
+            "email": res["email"],
+            "phone": res['phone'] if res["phone"] else None,
+            "user_type": res["user_type"],
+            "job_types": res["job_types"] if res["user_type"] == "worker" else None,
+            "id": str(res['_id']),
+            "profile_picture": res['profile_picture'] if res["profile_picture"] else None,
+            "rating": res['rating'] if res["rating"] else None
+        }
+
+def getUserById(id: str):
+    res = db.users.find_one({"_id": ObjectId(id)})
+    if res:
+        return {
+                "name": res["username"],
+                "email": res["email"],
+                "phone": res['phone'] if res["phone"] else None,
+                "user_type": res["user_type"],
+                "job_types": res["job_types"] if res["user_type"] == "worker" else None,
+                "id": str(res['_id']),
+                "profile_picture": res['profile_picture'] if res["profile_picture"] else None,
+                "rating": res['rating'] if res["rating"] else None
+            }
+    else:
+        return None
 

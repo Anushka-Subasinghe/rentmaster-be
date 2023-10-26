@@ -1,7 +1,6 @@
 import json
 from fastapi import HTTPException, status
-from typing import List, Dict
-from models.advertisement import AcceptAdvertisement, Advertisement, BidAdvertisement, CancelBid, CancelJob, CancelWorker, SelectWorker
+from models.advertisement import AcceptAdvertisement, Advertisement, BidAdvertisement, CancelBid, CancelJob, CancelWorker, FinishJob, SelectWorker
 from schemas.serialize import serializeDict, serializeList
 from config.db import db
 from bson import ObjectId
@@ -12,17 +11,21 @@ import os
 
 def predict(input_data):
     try:
-        print(input_data)
         
         # Convert the input data into a DataFrame
         input_df = pd.DataFrame([input_data])
 
         print("Current working directory:", os.getcwd())
+        print(input_data)
 
         loaded_best_model = joblib.load(os.getcwd() + '/controller/model.pkl')
+
+        print('model loaded')
         
         # Make predictions using the loaded model
         predictions = loaded_best_model.predict(input_df)
+
+        print('Prediction Array' + predictions)
 
         predicted_value = int(predictions[0])
 
@@ -52,6 +55,8 @@ def post_advertisement(advertisement: Advertisement):
     }
 
     prediction = predict(weather)
+
+    print(prediction)
 
     # Create the job document
     advertisement = {
@@ -119,6 +124,15 @@ def accept_advertisement(update: AcceptAdvertisement):
     {"$set": {"status": "Accepted", "worker_name": update.worker_name, "worker_id": update.worker_id, "price": update.price, "bid": [], "selectedWorkers": []}})
     
     inserted_doc = db.advertisements.find_one({"_id": ObjectId(update.id)})
+    return serializeDict(inserted_doc)
+
+def finish_job(finish: FinishJob):
+    print("<=====  =====>")
+    db.advertisements.find_one_and_update(
+        {"_id": ObjectId(finish.id)},
+    {"$set": {"status": "Completed"}})
+    
+    inserted_doc = db.advertisements.find_one({"_id": ObjectId(finish.id)})
     return serializeDict(inserted_doc)
 
 def cancel_job(cancel: CancelJob):
